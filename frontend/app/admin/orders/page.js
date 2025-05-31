@@ -10,12 +10,12 @@ export default function AdminOrdersPage() {
   const [couriers, setCouriers] = useState([]);
 
   const fetchOrders = async () => {
-    const res = await axios.get("/api/orders/admin/all"); // нужно создать маршрут
+    const res = await axios.get("/orders/admin/all"); // нужно создать маршрут
     setOrders(res.data);
   };
 
   const fetchCouriers = async () => {
-    const res = await axios.get("/api/users/couriers"); // нужен эндпоинт
+    const res = await axios.get("/users/couriers"); // нужен эндпоинт
     setCouriers(res.data);
   };
 
@@ -33,11 +33,31 @@ export default function AdminOrdersPage() {
   }, []);
 
   const handleStatusChange = async (orderId, newStatus) => {
-    await axios.patch(`/api/orders/${orderId}/status`, { status: newStatus });
+    try {
+      await axios.patch(`/orders/${orderId}/status`, { status: newStatus });
+    } catch (error) {
+      console.error(
+        "Ошибка изменения статуса:",
+        error.response?.data || error.message
+      );
+      alert(
+        "Ошибка при изменении статуса: " +
+          (error.response?.data?.error || error.message)
+      );
+    }
   };
 
   const handleAssignCourier = async (orderId, courierId) => {
-    await axios.patch(`/api/orders/${orderId}/assign`, { courierId });
+    if (!courierId) return; // не отправляем пустой ID
+
+    try {
+      await axios.patch(`/orders/${orderId}/assign`, { courierId });
+    } catch (error) {
+      console.error(
+        "Ошибка назначения курьера:",
+        error.response?.data || error
+      );
+    }
   };
 
   return (
@@ -70,9 +90,9 @@ export default function AdminOrdersPage() {
                   }
                   value={order.status}
                 >
-                  <option value="created">Создан</option>
-                  <option value="confirmed">Подтвержден</option>
-                  <option value="in_transit">В пути</option>
+                  <option value="accepted">Принят</option>
+                  <option value="preparing">Готовится</option>
+                  <option value="on_the_way">В пути</option>
                   <option value="delivered">Доставлен</option>
                 </select>
                 <select

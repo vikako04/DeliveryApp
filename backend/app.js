@@ -11,8 +11,14 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
+
+app.set("io", io);
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -30,6 +36,9 @@ app.get("/", (req, res) => res.send("API is running"));
 
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
+
+const userRoutes = require("./routes/user");
+app.use("/api/users", userRoutes);
 
 const storeRoutes = require("./routes/store");
 app.use("/api/stores", storeRoutes);

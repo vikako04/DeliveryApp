@@ -64,9 +64,29 @@ const getOrderById = async (req, res) => {
   }
 };
 
+const validStatuses = [
+  "pending",
+  "accepted",
+  "preparing",
+  "on_the_way",
+  "delivered",
+];
+
 const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
+
+    const validStatuses = [
+      "pending",
+      "accepted",
+      "preparing",
+      "on_the_way",
+      "delivered",
+    ];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ error: "Invalid status" });
+    }
+
     const order = await Order.findByIdAndUpdate(
       req.params.orderId,
       { status },
@@ -76,11 +96,16 @@ const updateOrderStatus = async (req, res) => {
       .populate("customer")
       .populate("courier");
 
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
     const io = req.app.get("io");
-    io.emit("orderUpdated", order); // 🔴 broadcast обновление заказа
+    io.emit("orderUpdated", order);
 
     res.json(order);
   } catch (err) {
+    console.error("Ошибка в updateOrderStatus:", err); // <--- вот здесь
     res.status(400).json({ error: "Failed to update order status" });
   }
 };
@@ -93,7 +118,7 @@ const assignCourier = async (req, res) => {
       req.params.orderId,
       {
         courier: courierId,
-        status: "in_transit",
+        status: "on_the_way",
       },
       { new: true }
     )
@@ -111,10 +136,6 @@ const assignCourier = async (req, res) => {
 };
 const getAllOrders = async (req, res) => {
   try {
-    if (req.user.role !== "admin") {
-      return res.status(403).json({ error: "Access denied" });
-    }
-
     const orders = await Order.find()
       .populate("items.product")
       .populate("customer", "name email")
