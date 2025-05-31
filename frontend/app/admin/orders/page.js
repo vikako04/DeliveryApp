@@ -61,59 +61,67 @@ export default function AdminOrdersPage() {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Все заказы</h1>
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 border">ID</th>
-            <th className="p-2 border">Пользователь</th>
-            <th className="p-2 border">Адрес</th>
-            <th className="p-2 border">Статус</th>
-            <th className="p-2 border">Курьер</th>
-            <th className="p-2 border">Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order._id} className="border-t">
-              <td className="p-2 border">{order._id.slice(-6)}</td>
-              <td className="p-2 border">{order.customer?.name}</td>
-              <td className="p-2 border">{order.address}</td>
-              <td className="p-2 border">{order.status}</td>
-              <td className="p-2 border">{order.courier?.name || "—"}</td>
-              <td className="p-2 border">
-                <select
-                  className="mr-2 border px-1"
-                  onChange={(e) =>
-                    handleStatusChange(order._id, e.target.value)
-                  }
-                  value={order.status}
-                >
-                  <option value="accepted">Принят</option>
-                  <option value="preparing">Готовится</option>
-                  <option value="on_the_way">В пути</option>
-                  <option value="delivered">Доставлен</option>
-                </select>
-                <select
-                  onChange={(e) =>
-                    handleAssignCourier(order._id, e.target.value)
-                  }
-                  value={order.courier?._id || ""}
-                  className="border px-1"
-                >
-                  <option value="">Назначить курьера</option>
-                  {couriers.map((courier) => (
-                    <option key={courier._id} value={courier._id}>
-                      {courier.name}
-                    </option>
-                  ))}
-                </select>
-              </td>
+    <div className="p-4 max-w-7xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6">Все заказы</h1>
+
+      <div className="overflow-x-auto rounded-xl shadow-md">
+        <table className="min-w-full bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <thead>
+            <tr className="bg-gray-100 text-gray-700 text-sm">
+              <th className="p-3 text-left">ID</th>
+              <th className="p-3 text-left">Пользователь</th>
+              <th className="p-3 text-left">Адрес</th>
+              <th className="p-3 text-left">Статус</th>
+              <th className="p-3 text-left">Курьер</th>
+              <th className="p-3 text-left">Действия</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="text-sm divide-y divide-gray-200">
+            {orders.map((order, index) => (
+              <tr
+                key={order._id}
+                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+              >
+                <td className="p-3">{order._id.slice(-6)}</td>
+                <td className="p-3">{order.customer?.name}</td>
+                <td className="p-3">{order.address}</td>
+                <td className="p-3 font-medium text-gray-700">
+                  {order.status}
+                </td>
+                <td className="p-3">{order.courier?.name || "—"}</td>
+                <td className="p-3 flex flex-col sm:flex-row gap-2">
+                  <select
+                    className="border rounded-md px-2 py-1 text-sm"
+                    onChange={(e) =>
+                      handleStatusChange(order._id, e.target.value)
+                    }
+                    value={order.status}
+                  >
+                    <option value="accepted">Принят</option>
+                    <option value="preparing">Готовится</option>
+                    <option value="on_the_way">В пути</option>
+                    <option value="delivered">Доставлен</option>
+                  </select>
+                  <select
+                    onChange={(e) =>
+                      handleAssignCourier(order._id, e.target.value)
+                    }
+                    value={order.courier?._id || ""}
+                    className="border rounded-md px-2 py-1 text-sm"
+                  >
+                    <option value="">Назначить курьера</option>
+                    {couriers.map((courier) => (
+                      <option key={courier._id} value={courier._id}>
+                        {courier.name}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

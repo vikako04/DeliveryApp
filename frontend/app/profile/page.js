@@ -3,11 +3,34 @@ import { useEffect, useState } from "react";
 import axios from "@/lib/api";
 import Cookies from "js-cookie";
 import OrderCard from "@/components/OrderCard";
+import socket from "@/lib/socket"; // твой socket
 
 export default function ProfilePage() {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [orderHistory, setOrderHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!currentOrder) return;
+
+    const handleOrderUpdate = (updatedOrder) => {
+      if (updatedOrder._id === currentOrder._id) {
+        setCurrentOrder(updatedOrder);
+
+        // Если заказ доставлен — переносим его в историю
+        if (updatedOrder.status === "delivered") {
+          setOrderHistory((prev) => [updatedOrder, ...prev]);
+          setCurrentOrder(null);
+        }
+      }
+    };
+
+    socket.on("orderUpdated", handleOrderUpdate);
+
+    return () => {
+      socket.off("orderUpdated", handleOrderUpdate);
+    };
+  }, [currentOrder]);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -16,7 +39,9 @@ export default function ProfilePage() {
 
       try {
         const { data } = await axios.get("/orders/my");
-        const active = data.find((o) => o.status !== "delivered");
+        const active = data.find((o) =>
+          ["pending", "accepted", "preparing", "on_the_way"].includes(o.status)
+        );
         const history = data.filter((o) => o.status === "delivered");
 
         setCurrentOrder(active || null);

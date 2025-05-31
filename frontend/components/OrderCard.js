@@ -1,7 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 export default function OrderCard({ order }) {
   const date = new Date(order.createdAt).toLocaleString("ru-RU");
-
+  const statusLabels = {
+    pending: "Ожидается",
+    accepted: "Принят",
+    preparing: "Готовится",
+    on_the_way: "В пути",
+    delivered: "Доставлен",
+  };
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <div className="flex justify-between mb-2 text-sm text-gray-500">
@@ -44,6 +50,7 @@ export default function OrderCard({ order }) {
             Tg
           </span>
         </p>
+
         <span
           className={`px-3 py-1 text-sm rounded-full ${
             order.status === "delivered"
@@ -53,11 +60,7 @@ export default function OrderCard({ order }) {
               : "bg-blue-100 text-blue-700"
           }`}
         >
-          {order.status === "pending"
-            ? "Ожидается"
-            : order.status === "in_delivery"
-            ? "В пути"
-            : "Доставлен"}
+          {statusLabels[order.status] || "Неизвестно"}
         </span>
       </div>
 
