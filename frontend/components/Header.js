@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation"; // ← добавить этот импорт
+import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
 
 export default function Header() {
@@ -11,7 +11,7 @@ export default function Header() {
   const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const { user, loading } = useAuth();
-  const router = useRouter(); // ← инициализация роутера
+  const router = useRouter();
 
   const handleLogout = () => {
     Cookies.remove("token");

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "@/lib/api";
 import Cookies from "js-cookie";
 import OrderCard from "@/components/OrderCard";
-import socket from "@/lib/socket"; // твой socket
+import socket from "@/lib/socket";
 
 export default function ProfilePage() {
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -17,7 +17,6 @@ export default function ProfilePage() {
       if (updatedOrder._id === currentOrder._id) {
         setCurrentOrder(updatedOrder);
 
-        // Если заказ доставлен — переносим его в историю
         if (updatedOrder.status === "delivered") {
           setOrderHistory((prev) => [updatedOrder, ...prev]);
           setCurrentOrder(null);

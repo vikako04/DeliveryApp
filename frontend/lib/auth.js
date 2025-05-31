@@ -16,30 +16,30 @@ export const register = async (name, email, password) => {
 
 export function useAuth() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // 👈
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const token = Cookies.get("token");
     if (!token) {
       setUser(null);
-      setLoading(false); // 👈
+      setLoading(false);
       return;
     }
 
     axios
       .get("/auth/me", {
         headers: {
-          Authorization: `Bearer ${token}`, // ← передаём токен
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
         setUser(res.data);
-        setLoading(false); // 👈
+        setLoading(false);
       })
       .catch(() => {
         setUser(null);
-        setLoading(false); // 👈
+        setLoading(false);
       });
   }, []);
 

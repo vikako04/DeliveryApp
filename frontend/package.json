@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@uploadthing/react": "^7.3.1",
+    "axios": "^1.9.0",
     "bootstrap-icons": "^1.13.1",
+    "js-cookie": "^3.0.5",
     "next": "15.3.2",
     "primeicons": "^7.0.0",
     "react": "^19.0.0",

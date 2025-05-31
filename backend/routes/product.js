@@ -10,10 +10,8 @@ const {
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
-// Все продукты конкретного магазина
 router.get("/:storeId", getProductsByStore);
 
-// Админ может добавлять, обновлять, удалять
 router.post("/", authMiddleware, roleMiddleware(["admin"]), createProduct);
 router.put(
   "/:productId",

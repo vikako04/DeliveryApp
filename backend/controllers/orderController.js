@@ -105,7 +105,7 @@ const updateOrderStatus = async (req, res) => {
 
     res.json(order);
   } catch (err) {
-    console.error("Ошибка в updateOrderStatus:", err); // <--- вот здесь
+    console.error("Ошибка в updateOrderStatus:", err);
     res.status(400).json({ error: "Failed to update order status" });
   }
 };
@@ -127,7 +127,7 @@ const assignCourier = async (req, res) => {
       .populate("courier");
 
     const io = req.app.get("io");
-    io.emit("orderUpdated", order); // 🔴
+    io.emit("orderUpdated", order);
 
     res.json(order);
   } catch (err) {

@@ -13,11 +13,9 @@ const {
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
-// Создание заказа (любой пользователь)
 router.post("/", authMiddleware, createOrder);
-router.get("/my", authMiddleware, getMyOrders); // ✅ вот эта строка
+router.get("/my", authMiddleware, getMyOrders);
 
-// Получение заказов конкретного пользователя (админ или сам пользователь)
 router.get("/user/:userId", authMiddleware, getOrdersByUser);
 
 router.get(
@@ -25,11 +23,9 @@ router.get(
   authMiddleware,
   roleMiddleware(["admin"]),
   getAllOrders
-); // до :orderId!
-// Получение одного заказа
+);
 router.get("/:orderId", authMiddleware, getOrderById);
 
-// Обновление статуса заказа (только админ или курьер)
 router.patch(
   "/:orderId/status",
   authMiddleware,

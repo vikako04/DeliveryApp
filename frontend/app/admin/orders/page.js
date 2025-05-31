@@ -10,12 +10,12 @@ export default function AdminOrdersPage() {
   const [couriers, setCouriers] = useState([]);
 
   const fetchOrders = async () => {
-    const res = await axios.get("/orders/admin/all"); // нужно создать маршрут
+    const res = await axios.get("/orders/admin/all");
     setOrders(res.data);
   };
 
   const fetchCouriers = async () => {
-    const res = await axios.get("/users/couriers"); // нужен эндпоинт
+    const res = await axios.get("/users/couriers");
     setCouriers(res.data);
   };
 
@@ -48,7 +48,7 @@ export default function AdminOrdersPage() {
   };
 
   const handleAssignCourier = async (orderId, courierId) => {
-    if (!courierId) return; // не отправляем пустой ID
+    if (!courierId) return;
 
     try {
       await axios.patch(`/orders/${orderId}/assign`, { courierId });

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const [name, setName] = useState(""); // <--- добавили
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await register(name, email, password); // <--- передаем name
+      await register(name, email, password);
       router.push("/");
     } catch (err) {
       setError("Ошибка при регистрации");

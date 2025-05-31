@@ -70,13 +70,13 @@ export default function CreateProductPage() {
         />
         <UploadButton
           appearance={{
-            button: "btn-primary", // Убираем растяжение
+            button: "btn-primary",
             allowedContent: "text-sm text-gray-500 mt-2",
           }}
           endpoint="imageUploader"
           onClientUploadComplete={async (res) => {
             const uploadedUrl = res?.[0]?.url;
-            if (!uploadedUrl) return; // Если нет URL, ничего не делаем
+            if (!uploadedUrl) return;
 
             setImage(uploadedUrl);
             alert("Upload Completed");
